@@ -76,10 +76,13 @@ partial def processTodo : CollectFnsM Unit := do
 
 partial def visitObject (x : Object) : CollectFnsM Unit := do
   match x with
+  | Inspect.Object.scalar _                  => pure ()
   | Inspect.Object.ctor _ args               => for arg in args do visitObject arg
   | Inspect.Object.closure _ (some f) _ args => visitFnString f *> for arg in args do visitObject arg
   | Inspect.Object.closure _ none _ args     => for arg in args do visitObject arg
-  | Inspect.Object.scalar _                  => pure ()
+  | Inspect.Object.array elems               => for elem in elems do visitObject elem
+  | Inspect.Object.sarray                    => pure ()
+  | Inspect.Object.string _                  => pure ()
   | Inspect.Object.unsupported               => pure ()
 
 def collectFns (env : Environment) (str2name : HashMap String Name) (obj : Object) : IO (Array Name) := do

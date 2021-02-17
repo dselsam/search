@@ -28,7 +28,7 @@ unsafe def mkHeuristic (env : Environment) : Heuristic m α := do
     for choice in choices do
       let thing ← liftM $ inspect (unsafeCast choice : PNonScalar)
       let names ← collectFns env str2name thing
-      println! "  [choice] {names}"
+      println! "  [choice]\n{repr thing}\n{names}"
     return { policy := choices.map λ _ => 1.0, value := 0.5 }
   pure ⟨score⟩
 
