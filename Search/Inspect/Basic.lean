@@ -16,6 +16,17 @@ inductive Object : Type
   | unsupported : Object /- TODO(dselsam): other kinds -/
   deriving Repr, Inhabited, BEq
 
+partial def Object.toCompactString : Object → String
+  | scalar n                     => s!"{n}"
+  | ctor n args                  => s!"T{n}({arrayToString args})"
+  | closure  _ _ arity args      => s!"C{arity}({arrayToString args})"
+  | array elems                  => s!"A({arrayToString elems})"
+  | sarray                       => s!"X"
+  | string s                     => s!"S"
+  | unsupported                  => s!"U"
+  where
+    arrayToString args := @ToString.toString _ (@Array.instToStringArray _ ⟨toCompactString⟩) args
+
 @[extern "lean_inspect"]
 constant inspect (thing : PNonScalar) : IO Object
 

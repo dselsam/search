@@ -65,6 +65,6 @@ instance : MonadLift m (SearchT m) where
 end Classic
 end Transform
 
-export Transform.Classic (Status.done Status.choice SearchT choiceM choice deadend)
+export Transform.Classic (Status.done Status.choice SearchT SearchT.mk choiceM choice deadend)
 
 end Search

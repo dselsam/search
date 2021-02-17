@@ -21,6 +21,7 @@ private def buildStr2Name (env : Environment) : HashMap String Name := do
 variable {m : Type → Type} [Monad m] [MonadLiftT IO m]
 variable {α : Type}
 
+
 unsafe def mkHeuristic (env : Environment) : Heuristic m α := do
   let str2name := buildStr2Name env
   let score (choices : Array α) : m Scores := do
@@ -28,9 +29,19 @@ unsafe def mkHeuristic (env : Environment) : Heuristic m α := do
     for choice in choices do
       let thing ← liftM $ inspect (unsafeCast choice : PNonScalar)
       let names ← collectFns env str2name thing
-      println! "  [choice]\n{repr thing}\n{names}"
+      println! "  [choice]\n{thing.toCompactString}\n{names}"
+      -- for name in names do printDecl name
     return { policy := choices.map λ _ => 1.0, value := 0.5 }
   pure ⟨score⟩
+
+  where
+    printDecl (name : Name) : m Unit := do
+      match IR.findEnvDecl env name with
+      | none   => pure ()
+      | some d =>
+        match d with
+        | IR.Decl.fdecl  _ xs type body _ => println! "\n\n[{name}]:\n{body}"
+        | IR.Decl.extern f xs type ext    => pure ()
 
 end Generic
 
