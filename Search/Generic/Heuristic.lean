@@ -21,7 +21,8 @@ private def buildStr2Name (env : Environment) : HashMap String Name := do
 variable {m : Type → Type} [Monad m] [MonadLiftT IO m]
 variable {α : Type}
 
-
+-- Note: does not actually provide a heuristic yet
+-- (it only prints the result of inspect)
 unsafe def mkHeuristic (env : Environment) : Heuristic m α := do
   let str2name := buildStr2Name env
   let score (choices : Array α) : m Scores := do

@@ -16,8 +16,8 @@ def SearchPath   : String := "build/"
 def Lean4LibPath : String := "/home/dselsam/omega/lean4/build/release/stage1/lib/lean"
 
 def exampleSearchT : SearchT IO (List Bool) := do
-  let x₁ : Bool ← choice #[false, true]
-  let x₂ : Bool ← choiceM (#[false, true].map λ b => pure b)
+  let x₁ : Bool  ← choice #[false, true]
+  let x₂ : Bool  ← choiceM (#[false, true].map λ b => pure b)
   let s : String ← choice #["s1", "s2"]
   if x₁ ∨ x₂ then deadend else pure [x₁, x₂]
 

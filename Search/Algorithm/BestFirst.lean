@@ -44,7 +44,10 @@ def bestFirstRestoring (ϕ : Heuristic m (SearchT m α)) (ψ : SearchT m α) (fu
     | Status.done x    => return some (← save, x)
     | Status.choice ψs =>
       let s ← save
-      let scores ← ϕ.score (ψs.map λ ψ => ((liftM (restore s : m Unit) : SearchT m Unit) *> ψ))
+      -- Note: we do not inspect on the `restore` step
+      -- We advocate explicitly summarizing the state, and relying on `inspect` only for
+      -- the downstream computation.
+      let scores ← ϕ.score ψs
       println! "  [scores] {repr scores}"
       -- TODO: insert into PQ (for now just want to collect funs)
       todo := todo ++ ψs.reverse.map λ ψ => (s, ψ)
